@@ -23,7 +23,7 @@ Route::prefix('comment')
 
          Route::middleware('token')->group(function () {
 
-             Route::post('create', 'CreateController@create');
+             Route::post('/', 'CreateController@create');
              Route::post('reply', 'ReplyController@reply');
 
          });
