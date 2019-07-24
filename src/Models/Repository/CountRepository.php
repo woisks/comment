@@ -45,6 +45,13 @@ class CountRepository
         self::$model = $count;
     }
 
+    /**
+     * first. 2019/7/24 13:23.
+     *
+     * @param $type
+     *
+     * @return mixed
+     */
     public function first($type)
     {
         return self::$model->where('name', $type)->first();

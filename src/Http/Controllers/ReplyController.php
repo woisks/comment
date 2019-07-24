@@ -51,11 +51,12 @@ class ReplyController extends BaseController
 
 
     /**
-     * reply. 2019/7/20 14:17.
+     * reply. 2019/7/24 14:14.
      *
      * @param \Woisks\Comment\Http\Requests\ReplyRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function reply(ReplyRequest $request)
     {
@@ -65,14 +66,19 @@ class ReplyController extends BaseController
         $parent = $request->input('parent');
 
         $count_db = $this->replyServices->count($type);
-
         if (!$count_db) {
-            return res(422, 'param error');
+            return res(422, 'param type error or not exists');
+        }
+
+        $parent_db = $this->replyServices->first($parent);
+        if (!$parent_db) {
+            return res(422, 'parent id  not exists');
         }
         try {
             DB::beginTransaction();
 
             $count_db->increment('count');
+            $parent_db->increment('count');
             $comment_db = $this->replyServices->comment($type, $numeric, $content, $parent, JwtService::jwt_account_uid());
         } catch (Throwable $e) {
             DB::rollBack();

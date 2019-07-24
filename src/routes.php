@@ -14,11 +14,18 @@ declare(strict_types=1);
 
 
 Route::prefix('comment')
+     ->middleware('throttle:20,1')
      ->namespace('Woisks\Comment\Http\Controllers')
      ->group(function () {
 
-         Route::any('create', 'CreateController@create');
-         Route::any('reply', 'ReplyController@reply');
-         Route::any('/{type}/{numeric}', 'GetController@get')->where(['type' => '[a-z]+', 'numeric' => '[0-9]+']);
+         Route::get('/{id}', 'GetController@reply')->where(['id' => '[0-9]+']);
+         Route::get('/{type}/{numeric}', 'GetController@comment')->where(['type' => '[a-z]+', 'numeric' => '[0-9]+']);
+
+         Route::middleware('token')->group(function () {
+
+             Route::post('create', 'CreateController@create');
+             Route::post('reply', 'ReplyController@reply');
+
+         });
 
      });

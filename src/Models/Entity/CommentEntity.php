@@ -39,11 +39,15 @@ class CommentEntity extends Models
         'id',
         'account_uid',
         'type',
-        'type_numeric',
+        'numeric',
         'content',
         'status',
         'created_at',
         'updated_at',
-        'parent_id'
+        'parent_id',
+        'count'
+    ];
+    protected $hidden   = [
+        'status'
     ];
 }

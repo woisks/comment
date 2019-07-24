@@ -17,6 +17,13 @@ namespace Woisks\Comment\Models\Services;
 
 use Woisks\Comment\Models\Repository\CommentRepository;
 
+/**
+ * Class GetServices.
+ *
+ * @package Woisks\Comment\Models\Services
+ *
+ * @Author  Maple Grove  <bolelin@126.com> 2019/7/24 14:22
+ */
 class GetServices
 {
     /**
@@ -39,8 +46,28 @@ class GetServices
         $this->commentRepo = $commentRepo;
     }
 
+    /**
+     * get. 2019/7/24 14:22.
+     *
+     * @param $type
+     * @param $numeric
+     *
+     * @return mixed
+     */
     public function get($type, $numeric)
     {
         return $this->commentRepo->whereGet($type, $numeric);
+    }
+
+    /**
+     * parent. 2019/7/24 14:22.
+     *
+     * @param $parent_id
+     *
+     * @return mixed
+     */
+    public function parent($parent_id)
+    {
+        return $this->commentRepo->parent($parent_id);
     }
 }

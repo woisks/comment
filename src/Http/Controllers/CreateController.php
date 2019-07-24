@@ -49,12 +49,14 @@ class CreateController extends BaseController
         $this->createServices = $createServices;
     }
 
+
     /**
-     * create. 2019/7/20 14:17.
+     * create. 2019/7/24 13:30.
      *
      * @param \Woisks\Comment\Http\Requests\CreateRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
      */
     public function create(CreateRequest $request)
     {
@@ -65,7 +67,7 @@ class CreateController extends BaseController
         $count_db = $this->createServices->count($type);
 
         if (!$count_db) {
-            return res(422, 'param error');
+            return res(422, 'param type error or not exists');
         }
         try {
             DB::beginTransaction();

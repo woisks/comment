@@ -47,21 +47,35 @@ class GetController extends BaseController
 
 
     /**
-     * get. 2019/7/20 14:51.
+     * comment. 2019/7/20 14:51.
      *
      * @param $type
      * @param $numeric
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function get($type, $numeric)
+    public function comment($type, $numeric)
     {
-        $db = $this->getServices->get($type, $numeric);
+        $comment_db = $this->getServices->get($type, $numeric);
 
-        if ($db->isEmpty()) {
+        if ($comment_db->isEmpty()) {
             return res(422, 'param error');
         }
 
-        return res(200, 'success', $db);
+        return res(200, 'success', $comment_db);
+    }
+
+    /**
+     * reply. 2019/7/24 14:59.
+     *
+     * @param $id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function reply($id)
+    {
+        $parent_db = $this->getServices->parent($id);
+
+        return res(200, 'success', $parent_db);
     }
 }

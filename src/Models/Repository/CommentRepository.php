@@ -58,11 +58,11 @@ class CommentRepository
     public function created($type, $numeric, $content, $uid)
     {
         return self::$model->create([
-            'id'           => create_numeric_id(),
-            'account_uid'  => $uid,
-            'type'         => $type,
-            'type_numeric' => $numeric,
-            'content'      => $content,
+            'id'          => create_numeric_id(),
+            'account_uid' => $uid,
+            'type'        => $type,
+            'numeric'     => $numeric,
+            'content'     => $content,
         ]);
     }
 
@@ -80,12 +80,12 @@ class CommentRepository
     public function reply($type, $numeric, $content, $parent_id, $uid)
     {
         return self::$model->create([
-            'id'           => create_numeric_id(),
-            'account_uid'  => $uid,
-            'type'         => $type,
-            'type_numeric' => $numeric,
-            'content'      => $content,
-            'parent_id'    => $parent_id
+            'id'          => create_numeric_id(),
+            'account_uid' => $uid,
+            'type'        => $type,
+            'numeric'     => $numeric,
+            'content'     => $content,
+            'parent_id'   => $parent_id
         ]);
     }
 
@@ -99,7 +99,31 @@ class CommentRepository
      */
     public function whereGet($type, $numeric)
     {
-        return self::$model->where('type_numeric', $numeric)->where('type', $type)->paginate();
+        return self::$model->where('numeric', $numeric)->where('type', $type)->paginate();
+    }
+
+    /**
+     * find. 2019/7/24 13:53.
+     *
+     * @param $id
+     *
+     * @return mixed
+     */
+    public function first($id)
+    {
+        return self::$model->find($id);
+    }
+
+    /**
+     * parent. 2019/7/24 14:21.
+     *
+     * @param $parent_id
+     *
+     * @return mixed
+     */
+    public function parent($parent_id)
+    {
+        return self::$model->where('parent_id', $parent_id)->paginate();
     }
 
 }

@@ -84,4 +84,15 @@ class ReplyServices
         return $this->commentRepo->reply($type, $numeric, $content, $parent_id, $uid);
     }
 
+    /**
+     * commentExists. 2019/7/24 13:52.
+     *
+     * @param $id
+     *
+     * @return mixed
+     */
+    public function first($id)
+    {
+        return $this->commentRepo->first($id);
+    }
 }
