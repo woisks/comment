@@ -18,7 +18,8 @@ namespace Woisks\Comment\Http\Controllers;
 use DB;
 use Throwable;
 use Woisks\Comment\Http\Requests\ReplyRequest;
-use Woisks\Comment\Models\Services\ReplyServices;
+use Woisks\Comment\Models\Repository\CommentRepository;
+use Woisks\Comment\Models\Repository\TypeRepository;
 use Woisks\Jwt\Services\JwtService;
 
 /**
@@ -31,22 +32,31 @@ use Woisks\Jwt\Services\JwtService;
 class ReplyController extends BaseController
 {
     /**
-     * replyServices.  2019/7/20 14:17.
+     * commentRepo.  2019/7/20 13:58.
      *
-     * @var  \Woisks\Comment\Models\Services\ReplyServices
+     * @var  \Woisks\Comment\Models\Repository\CommentRepository
      */
-    private $replyServices;
+    private $commentRepo;
+    /**
+     * typeRpo.  2019/7/20 13:58.
+     *
+     * @var  \Woisks\Comment\Models\Repository\TypeRepository
+     */
+    private $typeRpo;
 
     /**
-     * ReplyController constructor. 2019/7/20 14:17.
+     * CreateServices constructor. 2019/7/20 13:58.
      *
-     * @param \Woisks\Comment\Models\Services\ReplyServices $replyServices
+     * @param \Woisks\Comment\Models\Repository\CommentRepository $commentRepo
+     * @param \Woisks\Comment\Models\Repository\TypeRepository    $typeRpo
      *
      * @return void
      */
-    public function __construct(ReplyServices $replyServices)
+    public function __construct(CommentRepository $commentRepo,
+                                TypeRepository $typeRpo)
     {
-        $this->replyServices = $replyServices;
+        $this->commentRepo = $commentRepo;
+        $this->typeRpo = $typeRpo;
     }
 
 
@@ -61,16 +71,15 @@ class ReplyController extends BaseController
     public function reply(ReplyRequest $request)
     {
         $type = $request->input('type');
-        $numeric = $request->input('numeric');
         $content = $request->input('content');
         $parent = $request->input('parent');
 
-        $count_db = $this->replyServices->count($type);
+        $count_db = $this->typeRpo->first($type);
         if (!$count_db) {
             return res(422, 'param type error or not exists');
         }
 
-        $parent_db = $this->replyServices->first($parent);
+        $parent_db = $this->commentRepo->first($parent);
         if (!$parent_db) {
             return res(422, 'parent id  not exists');
         }
@@ -79,7 +88,7 @@ class ReplyController extends BaseController
 
             $count_db->increment('count');
             $parent_db->increment('count');
-            $comment_db = $this->replyServices->comment($type, $numeric, $content, $parent, JwtService::jwt_account_uid());
+            $comment_db = $this->commentRepo->reply($type, $content, $parent, JwtService::jwt_account_uid());
         } catch (Throwable $e) {
             DB::rollBack();
 

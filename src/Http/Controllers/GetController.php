@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace Woisks\Comment\Http\Controllers;
 
 
-use Woisks\Comment\Models\Services\GetServices;
+use Woisks\Comment\Models\Repository\CommentRepository;
 
 /**
  * Class GetController.
@@ -27,24 +27,24 @@ use Woisks\Comment\Models\Services\GetServices;
 class GetController extends BaseController
 {
     /**
-     * getServices.  2019/7/20 14:51.
+     * commentRepo.  2019/7/20 14:13.
      *
-     * @var  \Woisks\Comment\Models\Services\GetServices
+     * @var  \Woisks\Comment\Models\Repository\CommentRepository
      */
-    private $getServices;
+    private $commentRepo;
+
 
     /**
-     * GetController constructor. 2019/7/20 14:51.
+     * ReplyServices constructor. 2019/7/20 14:13.
      *
-     * @param \Woisks\Comment\Models\Services\GetServices $getServices
+     * @param \Woisks\Comment\Models\Repository\CommentRepository $commentRepo
      *
      * @return void
      */
-    public function __construct(GetServices $getServices)
+    public function __construct(CommentRepository $commentRepo)
     {
-        $this->getServices = $getServices;
+        $this->commentRepo = $commentRepo;
     }
-
 
     /**
      * comment. 2019/7/20 14:51.
@@ -56,10 +56,10 @@ class GetController extends BaseController
      */
     public function comment($type, $numeric)
     {
-        $comment_db = $this->getServices->get($type, $numeric);
+        $comment_db = $this->commentRepo->whereGet($type, $numeric);
 
         if ($comment_db->isEmpty()) {
-            return res(422, 'param error');
+            return res(404, 'param error or not exists');
         }
 
         return res(200, 'success', $comment_db);
@@ -74,7 +74,11 @@ class GetController extends BaseController
      */
     public function reply($id)
     {
-        $parent_db = $this->getServices->parent($id);
+        $parent_db = $this->commentRepo->parent($id);
+
+        if ($parent_db->isEmpty()) {
+            return res(404, 'param error or not exists');
+        }
 
         return res(200, 'success', $parent_db);
     }

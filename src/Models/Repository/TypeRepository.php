@@ -15,32 +15,32 @@ declare(strict_types=1);
 namespace Woisks\Comment\Models\Repository;
 
 
-use Woisks\Comment\Models\Entity\CountEntity;
+use Woisks\Comment\Models\Entity\TypeEntity;
 
 /**
- * Class CountRepository.
+ * Class TypeRepository.
  *
  * @package Woisks\Comment\Models\Repository
  *
  * @Author  Maple Grove  <bolelin@126.com> 2019/7/20 13:29
  */
-class CountRepository
+class TypeRepository
 {
     /**
      * model.  2019/7/20 13:29.
      *
-     * @var static \Woisks\Comment\Models\Entity\CountEntity
+     * @var static \Woisks\Comment\Models\Entity\TypeEntity
      */
     private static $model;
 
     /**
-     * CountRepository constructor. 2019/7/20 13:29.
+     * TypeRepository constructor. 2019/7/20 13:29.
      *
-     * @param \Woisks\Comment\Models\Entity\CountEntity $count
+     * @param \Woisks\Comment\Models\Entity\TypeEntity $count
      *
      * @return void
      */
-    public function __construct(CountEntity $count)
+    public function __construct(TypeEntity $count)
     {
         self::$model = $count;
     }
@@ -54,6 +54,6 @@ class CountRepository
      */
     public function first($type)
     {
-        return self::$model->where('name', $type)->first();
+        return self::$model->where('type', $type)->first();
     }
 }

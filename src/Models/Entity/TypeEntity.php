@@ -16,13 +16,13 @@ namespace Woisks\Comment\Models\Entity;
 
 
 /**
- * Class CountEntity.
+ * Class TypeEntity.
  *
  * @package Woisks\Comment\Models\Entity
  *
  * @Author  Maple Grove  <bolelin@126.com> 2019/7/20 13:26
  */
-class CountEntity extends Models
+class TypeEntity extends Models
 {
     /**
      * table.  2019/7/20 13:26.

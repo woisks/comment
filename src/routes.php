@@ -19,7 +19,7 @@ Route::prefix('comment')
      ->group(function () {
 
          Route::get('/{id}', 'GetController@reply')->where(['id' => '[0-9]+']);
-         Route::get('/{type}/{numeric}', 'GetController@comment')->where(['type' => '[a-z]+', 'numeric' => '[0-9]+']);
+         Route::get('/{type}/{numeric}', 'GetController@comment')->where(['type' => '[a-z_]+', 'numeric' => '[0-9]+']);
 
          Route::middleware('token')->group(function () {
 

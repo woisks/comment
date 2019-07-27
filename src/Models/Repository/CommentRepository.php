@@ -70,20 +70,18 @@ class CommentRepository
      * reply. 2019/7/20 13:57.
      *
      * @param $type
-     * @param $numeric
      * @param $content
      * @param $parent_id
      * @param $uid
      *
      * @return mixed
      */
-    public function reply($type, $numeric, $content, $parent_id, $uid)
+    public function reply($type, $content, $parent_id, $uid)
     {
         return self::$model->create([
             'id'          => create_numeric_id(),
             'account_uid' => $uid,
             'type'        => $type,
-            'numeric'     => $numeric,
             'content'     => $content,
             'parent_id'   => $parent_id
         ]);

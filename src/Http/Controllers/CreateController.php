@@ -18,7 +18,8 @@ namespace Woisks\Comment\Http\Controllers;
 use DB;
 use Throwable;
 use Woisks\Comment\Http\Requests\CreateRequest;
-use Woisks\Comment\Models\Services\CreateServices;
+use Woisks\Comment\Models\Repository\CommentRepository;
+use Woisks\Comment\Models\Repository\TypeRepository;
 use Woisks\Jwt\Services\JwtService;
 
 /**
@@ -31,22 +32,31 @@ use Woisks\Jwt\Services\JwtService;
 class CreateController extends BaseController
 {
     /**
-     * createServices.  2019/7/20 14:17.
+     * commentRepo.  2019/7/20 13:58.
      *
-     * @var  \Woisks\Comment\Models\Services\CreateServices
+     * @var  \Woisks\Comment\Models\Repository\CommentRepository
      */
-    private $createServices;
+    private $commentRepo;
+    /**
+     * typeRpo.  2019/7/20 13:58.
+     *
+     * @var  \Woisks\Comment\Models\Repository\TypeRepository
+     */
+    private $typeRpo;
 
     /**
-     * CreateController constructor. 2019/7/20 14:17.
+     * CreateServices constructor. 2019/7/20 13:58.
      *
-     * @param \Woisks\Comment\Models\Services\CreateServices $createServices
+     * @param \Woisks\Comment\Models\Repository\CommentRepository $commentRepo
+     * @param \Woisks\Comment\Models\Repository\TypeRepository    $typeRpo
      *
      * @return void
      */
-    public function __construct(CreateServices $createServices)
+    public function __construct(CommentRepository $commentRepo,
+                                TypeRepository $typeRpo)
     {
-        $this->createServices = $createServices;
+        $this->commentRepo = $commentRepo;
+        $this->typeRpo = $typeRpo;
     }
 
 
@@ -64,7 +74,7 @@ class CreateController extends BaseController
         $numeric = $request->input('numeric');
         $content = $request->input('content');
 
-        $count_db = $this->createServices->count($type);
+        $count_db = $this->typeRpo->first($type);
 
         if (!$count_db) {
             return res(422, 'param type error or not exists');
@@ -73,7 +83,7 @@ class CreateController extends BaseController
             DB::beginTransaction();
 
             $count_db->increment('count');
-            $comment_db = $this->createServices->comment($type, $numeric, $content, JwtService::jwt_account_uid());
+            $comment_db = $this->commentRepo->created($type, $numeric, $content, JwtService::jwt_account_uid());
         } catch (Throwable $e) {
             DB::rollBack();
 

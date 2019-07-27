@@ -35,7 +35,6 @@ class ReplyRequest extends Requests
     {
         return [
             'type'    => 'required|string|min:2|max:20',
-            'numeric' => 'required|numeric|digits_between:18,19',
             'content' => 'required|string|min:1|max:255',
             'parent'  => 'required|numeric|digits_between:18,19'
         ];
