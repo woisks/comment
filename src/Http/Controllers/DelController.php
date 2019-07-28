@@ -15,40 +15,35 @@ declare(strict_types=1);
 namespace Woisks\Comment\Http\Controllers;
 
 
-use DB;
 use Illuminate\Http\JsonResponse;
-use Throwable;
-use Woisks\Comment\Http\Requests\ReplyRequest;
 use Woisks\Comment\Models\Repository\CommentRepository;
 use Woisks\Comment\Models\Repository\TypeRepository;
-use Woisks\Jwt\Services\JwtService;
 
 /**
- * Class ReplyController.
+ * Class DelController.
  *
  * @package Woisks\Comment\Http\Controllers
  *
- * @Author  Maple Grove  <bolelin@126.com> 2019/7/20 14:17
+ * @Author Maple Grove  <bolelin@126.com> 2019/7/28 11:00
  */
-class ReplyController extends BaseController
+class DelController extends BaseController
 {
-
     /**
-     * commentRepo.  2019/7/28 10:28.
+     * commentRepo.  2019/7/28 10:18.
      *
      * @var  CommentRepository
      */
     private $commentRepo;
 
     /**
-     * typeRpo.  2019/7/28 10:28.
+     * typeRpo.  2019/7/28 10:18.
      *
      * @var  TypeRepository
      */
     private $typeRpo;
 
     /**
-     * ReplyController constructor. 2019/7/28 10:28.
+     * DelController constructor. 2019/7/28 11:01.
      *
      * @param CommentRepository $commentRepo
      * @param TypeRepository $typeRpo
@@ -62,44 +57,35 @@ class ReplyController extends BaseController
         $this->typeRpo     = $typeRpo;
     }
 
-
     /**
-     * reply. 2019/7/28 10:28.
+     * del. 2019/7/28 11:01.
      *
-     * @param ReplyRequest $request
+     * @param $id
      *
      * @return JsonResponse
-     * @throws \Exception
      */
-    public function reply(ReplyRequest $request)
+    public function del($id)
     {
-        $type    = $request->input('type');
-        $content = $request->input('content');
-        $parent  = $request->input('parent');
-
-        $count_db = $this->typeRpo->first($type);
-        if (!$count_db) {
-            return res(404, 'param type error or not exists');
-        }
-
-        $parent_db = $this->commentRepo->first($parent);
-        if (!$parent_db) {
-            return res(404, 'parent id  not exists');
+        if (strlen($id) != 18 && strlen($id) != 19 && !is_int($id)) {
+            return res(422, 'param id error');
         }
         try {
-            DB::beginTransaction();
+            \DB::beginTransaction();
 
-            $count_db->increment('count');
-            $parent_db->increment('count');
-            $comment_db = $this->commentRepo->reply($type, $content, $parent, JwtService::jwt_account_uid());
+            if (!$comment = $this->commentRepo->first($id)) {
+                return res(404, 'param id error or not exists ');
+            }
+            $this->typeRpo->decrement($comment->type);
+            $comment->delete();
 
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
 
-            DB::rollBack();
-            return res(422, 'param error');
+            \DB::rollBack();
+            return res(500, 'Come back later');
         }
+        \DB::commit();
+        return res(200, 'success');
 
-        DB::commit();
-        return res(200, 'success', $comment_db);
+
     }
 }

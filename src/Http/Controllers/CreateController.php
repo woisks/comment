@@ -16,6 +16,7 @@ namespace Woisks\Comment\Http\Controllers;
 
 
 use DB;
+use Illuminate\Http\JsonResponse;
 use Throwable;
 use Woisks\Comment\Http\Requests\CreateRequest;
 use Woisks\Comment\Models\Repository\CommentRepository;
@@ -31,24 +32,26 @@ use Woisks\Jwt\Services\JwtService;
  */
 class CreateController extends BaseController
 {
+
     /**
-     * commentRepo.  2019/7/20 13:58.
+     * commentRepo.  2019/7/28 10:18.
      *
-     * @var  \Woisks\Comment\Models\Repository\CommentRepository
+     * @var  CommentRepository
      */
     private $commentRepo;
+
     /**
-     * typeRpo.  2019/7/20 13:58.
+     * typeRpo.  2019/7/28 10:18.
      *
-     * @var  \Woisks\Comment\Models\Repository\TypeRepository
+     * @var  TypeRepository
      */
     private $typeRpo;
 
     /**
-     * CreateServices constructor. 2019/7/20 13:58.
+     * CreateController constructor. 2019/7/28 10:18.
      *
-     * @param \Woisks\Comment\Models\Repository\CommentRepository $commentRepo
-     * @param \Woisks\Comment\Models\Repository\TypeRepository    $typeRpo
+     * @param CommentRepository $commentRepo
+     * @param TypeRepository $typeRpo
      *
      * @return void
      */
@@ -56,37 +59,37 @@ class CreateController extends BaseController
                                 TypeRepository $typeRpo)
     {
         $this->commentRepo = $commentRepo;
-        $this->typeRpo = $typeRpo;
+        $this->typeRpo     = $typeRpo;
     }
 
 
     /**
-     * create. 2019/7/24 13:30.
+     * create. 2019/7/28 10:18.
      *
-     * @param \Woisks\Comment\Http\Requests\CreateRequest $request
+     * @param CreateRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      * @throws \Exception
      */
     public function create(CreateRequest $request)
     {
-        $type = $request->input('type');
+        $type    = $request->input('type');
         $numeric = $request->input('numeric');
         $content = $request->input('content');
 
-        $count_db = $this->typeRpo->first($type);
+        $type_db = $this->typeRpo->first($type);
 
-        if (!$count_db) {
-            return res(422, 'param type error or not exists');
+        if (!$type_db) {
+            return res(404, 'param type error or not exists');
         }
+
         try {
             DB::beginTransaction();
 
-            $count_db->increment('count');
+            $type_db->increment('count');
             $comment_db = $this->commentRepo->created($type, $numeric, $content, JwtService::jwt_account_uid());
         } catch (Throwable $e) {
             DB::rollBack();
-
             return res(422, 'param error');
         }
 

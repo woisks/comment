@@ -26,17 +26,19 @@ use Woisks\Comment\Models\Entity\CommentEntity;
  */
 class CommentRepository
 {
+
     /**
-     * model.  2019/7/20 13:29.
+     * model.  2019/7/28 10:11.
      *
-     * @var static \Woisks\Comment\Models\Entity\CommentEntity
+     * @var static CommentEntity
      */
     private static $model;
 
+
     /**
-     * CommentRepository constructor. 2019/7/20 13:29.
+     * CommentRepository constructor. 2019/7/28 10:11.
      *
-     * @param \Woisks\Comment\Models\Entity\CommentEntity $comment
+     * @param CommentEntity $comment
      *
      * @return void
      */
@@ -45,8 +47,9 @@ class CommentRepository
         self::$model = $comment;
     }
 
+
     /**
-     * created. 2019/7/20 13:56.
+     * created. 2019/7/28 10:11.
      *
      * @param $type
      * @param $numeric

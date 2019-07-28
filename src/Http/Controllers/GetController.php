@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Woisks\Comment\Http\Controllers;
 
 
+use Illuminate\Http\JsonResponse;
 use Woisks\Comment\Models\Repository\CommentRepository;
 
 /**
@@ -26,18 +27,19 @@ use Woisks\Comment\Models\Repository\CommentRepository;
  */
 class GetController extends BaseController
 {
+
     /**
-     * commentRepo.  2019/7/20 14:13.
+     * commentRepo.  2019/7/28 10:19.
      *
-     * @var  \Woisks\Comment\Models\Repository\CommentRepository
+     * @var  CommentRepository
      */
     private $commentRepo;
 
 
     /**
-     * ReplyServices constructor. 2019/7/20 14:13.
+     * GetController constructor. 2019/7/28 10:19.
      *
-     * @param \Woisks\Comment\Models\Repository\CommentRepository $commentRepo
+     * @param CommentRepository $commentRepo
      *
      * @return void
      */
@@ -46,13 +48,14 @@ class GetController extends BaseController
         $this->commentRepo = $commentRepo;
     }
 
+
     /**
-     * comment. 2019/7/20 14:51.
+     * comment. 2019/7/28 10:19.
      *
      * @param $type
      * @param $numeric
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function comment($type, $numeric)
     {
@@ -65,12 +68,13 @@ class GetController extends BaseController
         return res(200, 'success', $comment_db);
     }
 
+
     /**
-     * reply. 2019/7/24 14:59.
+     * reply. 2019/7/28 10:19.
      *
      * @param $id
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function reply($id)
     {
