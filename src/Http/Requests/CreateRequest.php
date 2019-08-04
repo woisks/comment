@@ -16,7 +16,7 @@ namespace Woisks\Comment\Http\Requests;
 
 
 /**
- * Class CreateRequest.
+ * Class ChangeRequest.
  *
  * @package Woisks\Comment\Http\Requests
  *

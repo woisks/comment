@@ -25,7 +25,7 @@ use Woisks\Comment\Models\Repository\UserRepository;
 use Woisks\Jwt\Services\JwtService;
 
 /**
- * Class CreateController.
+ * Class ChangeController.
  *
  * @package Woisks\Comment\Http\Controllers
  *
@@ -57,7 +57,7 @@ class CreateController extends BaseController
 
 
     /**
-     * CreateController constructor. 2019/8/4 11:13.
+     * ChangeController constructor. 2019/8/4 11:13.
      *
      * @param CommentRepository $commentRepo
      * @param TypeRepository $typeRpo
