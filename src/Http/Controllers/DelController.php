@@ -18,6 +18,7 @@ namespace Woisks\Comment\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Woisks\Comment\Models\Repository\CommentRepository;
 use Woisks\Comment\Models\Repository\TypeRepository;
+use Woisks\Jwt\Services\JwtService;
 
 /**
  * Class DelController.
@@ -57,12 +58,14 @@ class DelController extends BaseController
         $this->typeRpo     = $typeRpo;
     }
 
+
     /**
-     * del. 2019/7/28 11:01.
+     * del. 2019/8/4 11:00.
      *
      * @param $id
      *
      * @return JsonResponse
+     * @throws \Exception
      */
     public function del($id)
     {
@@ -75,6 +78,15 @@ class DelController extends BaseController
             if (!$comment = $this->commentRepo->first($id)) {
                 return res(404, 'param id error or not exists ');
             }
+
+            if ($comment->account_uid != JwtService::jwt_account_uid()) {
+                return res(404, 'your comment not exists ');
+            }
+
+            if ($comment->count != 0) {
+                return res(409, 'reply not empty delete error');
+            }
+
             $this->typeRpo->decrement($comment->type);
             $comment->delete();
 

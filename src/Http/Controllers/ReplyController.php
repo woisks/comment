@@ -78,19 +78,24 @@ class ReplyController extends BaseController
         $parent  = $request->input('parent');
 
         $count_db = $this->typeRpo->first($type);
+        //效验模块
         if (!$count_db) {
             return res(404, 'param type error or not exists');
         }
 
         $parent_db = $this->commentRepo->first($parent);
+        //效验评价是否存在
         if (!$parent_db) {
             return res(404, 'parent id  not exists');
         }
+
         try {
             DB::beginTransaction();
 
             $count_db->increment('count');
             $parent_db->increment('count');
+
+            //创建评价回复
             $comment_db = $this->commentRepo->reply($type, $content, $parent, JwtService::jwt_account_uid());
 
         } catch (Throwable $e) {

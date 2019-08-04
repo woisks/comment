@@ -18,8 +18,11 @@ Route::prefix('comment')
     ->namespace('Woisks\Comment\Http\Controllers')
     ->group(function () {
 
-        Route::get('/{id}', 'GetController@reply')->where(['id' => '[0-9]+']);
-        Route::get('/{type}/{numeric}', 'GetController@comment')->where(['type' => '[a-z_]+', 'numeric' => '[0-9]+']);
+        //获取评价的回复
+        Route::get('/reply/{id}', 'GetController@reply')->where(['id' => '[0-9]+']);
+
+        //根据模块获取评价
+        Route::get('/{type}/{numeric}', 'GetController@comment')->where(['type' => '[a-z_a-z]+', 'numeric' => '[0-9]+']);
 
         Route::middleware('token')->group(function () {
 
