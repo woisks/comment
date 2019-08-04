@@ -76,10 +76,12 @@ class DelController extends BaseController
             \DB::beginTransaction();
 
             if (!$comment = $this->commentRepo->first($id)) {
-                return res(404, 'param id error or not exists ');
+                //验证评价ID
+                return res(404, 'param id not exists ');
             }
 
             if ($comment->account_uid != JwtService::jwt_account_uid()) {
+                //验证权限
                 return res(404, 'your comment not exists ');
             }
 

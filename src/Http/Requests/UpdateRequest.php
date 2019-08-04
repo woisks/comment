@@ -12,41 +12,30 @@ declare(strict_types=1);
  * +----------------------------------------------------------------------+
  */
 
-namespace Woisks\Comment\Models\Entity;
+namespace Woisks\Comment\Http\Requests;
 
 
 /**
- * Class UserEntity.
+ * Class UpdateRequest.
  *
- * @package Woisks\Comment\Models\Entity
+ * @package Woisks\Comment\Http\Requests
  *
- * @Author Maple Grove  <bolelin@126.com> 2019/8/4 11:09
+ * @Author  Maple Grove  <bolelin@126.com> 2019/7/20 14:21
  */
-class UserEntity extends Models
+class UpdateRequest extends Requests
 {
     /**
-     * table.  2019/8/4 11:09.
+     * rules. 2019/7/20 14:21.
      *
-     * @var  string
+     *
+     * @return array|mixed
      */
-    protected $table = 'comment_user_count';
+    public function rules()
+    {
+        return [
+            'id'      => 'required|numeric|digits_between:18,19',
+            'content' => 'required|string|min:1|max:255'
+        ];
+    }
 
-    /**
-     * fillable.  2019/8/4 11:09.
-     *
-     * @var  array
-     */
-    protected $fillable = [
-        'id',
-        'account_uid',
-        'type',
-        'count'
-    ];
-
-    /**
-     * timestamps.  2019/8/4 11:09.
-     *
-     * @var  bool
-     */
-    public $timestamps = false;
 }

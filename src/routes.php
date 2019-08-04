@@ -27,6 +27,7 @@ Route::prefix('comment')
         Route::middleware('token')->group(function () {
 
             Route::post('/', 'CreateController@create');
+            Route::post('/update', 'UpdateController@update');
             Route::post('reply', 'ReplyController@reply');
             Route::post('/del/{id}', 'DelController@del')->where(['id' => '[0-9]+']);
 

@@ -47,8 +47,9 @@ class ReplyController extends BaseController
      */
     private $typeRpo;
 
+
     /**
-     * ReplyController constructor. 2019/7/28 10:28.
+     * ReplyController constructor. 2019/8/4 22:18.
      *
      * @param CommentRepository $commentRepo
      * @param TypeRepository $typeRpo
@@ -74,17 +75,18 @@ class ReplyController extends BaseController
     public function reply(ReplyRequest $request)
     {
         $type    = $request->input('type');
+        $numeric = $request->input('numeric');
         $content = $request->input('content');
         $parent  = $request->input('parent');
 
         $count_db = $this->typeRpo->first($type);
         //效验模块
         if (!$count_db) {
-            return res(404, 'param type error or not exists');
+            return res(404, 'param type not exists');
         }
 
         $parent_db = $this->commentRepo->first($parent);
-        //效验评价是否存在
+        //效验评价ID是否存在
         if (!$parent_db) {
             return res(404, 'parent id  not exists');
         }
@@ -96,7 +98,7 @@ class ReplyController extends BaseController
             $parent_db->increment('count');
 
             //创建评价回复
-            $comment_db = $this->commentRepo->reply($type, $content, $parent, JwtService::jwt_account_uid());
+            $comment_db = $this->commentRepo->reply($type, $numeric, $content, $parent, JwtService::jwt_account_uid());
 
         } catch (Throwable $e) {
 

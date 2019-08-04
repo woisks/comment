@@ -21,7 +21,6 @@ use Throwable;
 use Woisks\Comment\Http\Requests\CreateRequest;
 use Woisks\Comment\Models\Repository\CommentRepository;
 use Woisks\Comment\Models\Repository\TypeRepository;
-use Woisks\Comment\Models\Repository\UserRepository;
 use Woisks\Jwt\Services\JwtService;
 
 /**
@@ -49,29 +48,19 @@ class CreateController extends BaseController
     private $typeRpo;
 
     /**
-     * userRepo.  2019/8/4 11:13.
-     *
-     * @var  UserRepository
-     */
-    private $userRepo;
-
-
-    /**
      * ChangeController constructor. 2019/8/4 11:13.
      *
      * @param CommentRepository $commentRepo
      * @param TypeRepository $typeRpo
-     * @param UserRepository $userRepo
      *
      * @return void
      */
     public function __construct(CommentRepository $commentRepo,
-                                TypeRepository $typeRpo,
-                                UserRepository $userRepo)
+                                TypeRepository $typeRpo)
     {
         $this->commentRepo = $commentRepo;
         $this->typeRpo     = $typeRpo;
-        $this->userRepo    = $userRepo;
+
     }
 
 
@@ -92,16 +81,13 @@ class CreateController extends BaseController
         $type_db = $this->typeRpo->first($type);
         //效验评价模块
         if (!$type_db) {
-            return res(404, 'param type error or not exists');
+            return res(404, 'param type not exists');
         }
 
         try {
             DB::beginTransaction();
 
             $type_db->increment('count');
-
-            //用户评价模块统计
-            $this->userRepo->incrementU(JwtService::jwt_account_uid(), $type);
 
             //创建评价
             $comment_db = $this->commentRepo->created($type, $numeric, $content, JwtService::jwt_account_uid());
