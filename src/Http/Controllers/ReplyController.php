@@ -90,6 +90,15 @@ class ReplyController extends BaseController
         if (!$parent_db) {
             return res(404, 'parent id  not exists');
         }
+        if ($parent_db->type != $type) {
+            //效验回复当前type
+            return res(422, 'param type error ');
+        }
+
+        if ($parent_db->numeric != $numeric) {
+            //效验当前回复numeric
+            return res(422, 'param numeric error ');
+        }
 
         try {
             DB::beginTransaction();
